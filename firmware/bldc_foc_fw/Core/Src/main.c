@@ -45,7 +45,8 @@
 COM_InitTypeDef BspCOMInit;
 
 /* USER CODE BEGIN PV */
-
+/* Boot line sent once at start-up; const keeps it in flash, not RAM. */
+static const uint8_t eg_boot_msg[] = "BLDC FOC fw boot\r\n";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -113,12 +114,21 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  /* BSP_COM_Init above has already set up USART3 (COM1) on the ST-Link virtual COM port,
+    * so transmitting is safe from here on. hcom_uart[COM1] is the BSP-owned UART handle.
+    * sizeof minus 1 drops the string's terminating zero; 100 ms is the timeout.
+    * (void) cast: status is deliberately ignored during bring-up. */
+   (void)HAL_UART_Transmit(&hcom_uart[COM1], eg_boot_msg, (uint16_t)(sizeof(eg_boot_msg) - 1UL), 100UL);
   while (1)
   {
 
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  /* Toggle the green LED through the BSP so we can see the main loop is alive. */
+	     BSP_LED_Toggle(LED_GREEN);
+	     /* Wait 500 ms between toggles, which gives a 1 Hz blink. HAL_Delay relies on SysTick. */
+	     HAL_Delay(500UL);
   }
   /* USER CODE END 3 */
 }
