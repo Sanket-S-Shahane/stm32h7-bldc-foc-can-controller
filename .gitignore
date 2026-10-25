@@ -1,5 +1,5 @@
-firmware/Debug/
-firmware/Release/
+Debug/
+Release/
 .metadata/
 *.swp
 .DS_Store
