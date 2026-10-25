@@ -1,0 +1,7 @@
+firmware/Debug/
+firmware/Release/
+.metadata/
+*.swp
+.DS_Store
+Thumbs.db
+*.log
